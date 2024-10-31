@@ -1,4 +1,4 @@
-# Gonew-templates [![License](https://img.shields.io/badge/License-MIT%202.0-green.svg)](https://github.com/thylong/gonew-templates/blob/main/01-simple-k8s-application/LICENSE)
+# Go-templates [![License](https://img.shields.io/badge/License-MIT%202.0-green.svg)](https://github.com/thylong/go-templates/blob/main/01-simple-k8s-application/LICENSE)
 
 This repository contains a list of go application templates to use with `$ gonew`.
 The idea is reduce the burden of bootstrapping my Go applications.
@@ -13,7 +13,7 @@ go install golang.org/x/tools/cmd/gonew@latest
 ## Quickstart
 
 ```bash
-gonew github.com/thylong/gonew-templates/01-simple-k8s-application example.com/simple-app```
+gonew github.com/thylong/go-templates/01-simple-k8s-application example.com/simple-app```
 
 ## Features
 
