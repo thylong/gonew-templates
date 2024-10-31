@@ -13,7 +13,8 @@ go install golang.org/x/tools/cmd/gonew@latest
 ## Quickstart
 
 ```bash
-gonew github.com/thylong/go-templates/01-simple-k8s-application example.com/simple-app```
+gonew github.com/thylong/go-templates/01-simple-k8s-application example.com/simple-app
+```
 
 ## Features
 
