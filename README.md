@@ -27,3 +27,7 @@ gonew github.com/thylong/go-templates/01-simple-k8s-application example.com/simp
 - [x] Simple go app including go.mod & cobra
 - [x] Restrictive k8s Network Policy
 - [x] LICENSE & related badge
+
+## License
+
+This library is licensed under MIT Full license text is available in [LICENSE](https://github.com/thylong/go-templates/blob/main/LICENSE).
