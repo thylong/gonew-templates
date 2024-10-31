@@ -1,4 +1,4 @@
-module github.com/thylong/go-templates
+module github.com/thylong/gonew-templates/01-simple-k8s-application
 
 go 1.23.2
 
