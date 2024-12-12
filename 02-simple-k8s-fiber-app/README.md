@@ -7,6 +7,10 @@
 
 ## Quickstart
 
+```bash
+gonew github.com/thylong/gonew-templates/01-simple-k8s-application example.com/myapp
+```
+
 ## Benchmarks
 
 ## Installation
