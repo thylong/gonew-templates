@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
@@ -13,6 +16,7 @@ var (
 	port         string
 	httpTimeout  int64
 	loggingLevel string
+	enablePprof  bool
 )
 
 func init() {
@@ -20,6 +24,7 @@ func init() {
 
 	runCmd.Flags().StringVarP(&port, "port", "p", ":8080", "HTTP port to listen on")
 	runCmd.Flags().StringVarP(&loggingLevel, "logging_level", "l", "info", "The app logging level")
+	runCmd.Flags().BoolVarP(&enablePprof, "profile", "f", false, "enable profiling with Pprof")
 	runCmd.Flags().Int64VarP(&httpTimeout, "timeout", "t", 500, "HTTP request timeout in milliseconds")
 }
 
@@ -38,7 +43,16 @@ var runCmd = &cobra.Command{
 	Long:  `Run the application with given configuration (default with optional CLI flags overrides)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
 		flag.Parse()
+		if enablePprof {
+			go func() {
+				log.Println("Starting pprof on :6060")
+				if err := http.ListenAndServe(":6060", nil); err != nil {
+					log.Fatalf("pprof server failed: %v", err)
+				}
+			}()
+		}
 
 		// create Fiber app
 		app := server.CreateApp(httpTimeout, loggingLevel)
