@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
@@ -42,5 +43,9 @@ var runCmd = &cobra.Command{
 
 		// create Fiber app
 		app := server.CreateApp(httpTimeout, loggingLevel)
+		err := app.App.Listen("0.0.0.0" + port)
+		if err != nil {
+			log.Fatalf("fiber server failed to start: %v\n", err)
+		}
 	},
 }

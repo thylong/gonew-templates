@@ -49,12 +49,16 @@ var runCmd = &cobra.Command{
 			go func() {
 				log.Println("Starting pprof on :6060")
 				if err := http.ListenAndServe(":6060", nil); err != nil {
-					log.Fatalf("pprof server failed: %v", err)
+					log.Fatalf("pprof server failed: %v\n", err)
 				}
 			}()
 		}
 
 		// create Fiber app
 		app := server.CreateApp(httpTimeout, loggingLevel)
+		err := app.App.Listen("0.0.0.0" + port)
+		if err != nil {
+			log.Fatalf("fiber server failed to start: %v\n", err)
+		}
 	},
 }
