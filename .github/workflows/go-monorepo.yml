@@ -17,7 +17,7 @@ jobs:
         module:
           - 01-simple-k8s-application
           - 02-simple-k8s-fiber-app
-          - 03-simple-fiber-sqlc
+          - 03-k8s-fiber-sqlc
 
     steps:
       # Checkout the repository
