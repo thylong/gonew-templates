@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/timeout"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/thylong/go-templates/internal/core"
+	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/internal/core"
 )
 
 func CreateApp(httpTimeout int64, loggingLevel string) *core.App {

@@ -1,4 +1,4 @@
-module github.com/thylong/go-templates
+module github.com/thylong/go-templates/02-simple-k8s-fiber-app
 
 go 1.23.2
 
@@ -6,7 +6,6 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.1
-	github.com/thylong/fiber/v2 v2.81.0
 )
 
 require (

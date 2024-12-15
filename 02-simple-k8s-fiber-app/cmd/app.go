@@ -9,7 +9,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"github.com/thylong/go-templates/internal/server"
+	"github.com/thylong/go-templates/02-simple-k8s-fiber-app/internal/server"
 )
 
 var (

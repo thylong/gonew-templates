@@ -7,7 +7,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"github.com/thylong/go-templates/internal/server"
+	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/internal/server"
 )
 
 var (
