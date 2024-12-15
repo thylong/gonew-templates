@@ -1,0 +1,7 @@
+apiVersion: v2
+name: example
+description: Example is a modern distributed & customizable HTTP cache built for performances and for the cloud
+
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

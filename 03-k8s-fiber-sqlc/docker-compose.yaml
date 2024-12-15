@@ -1,0 +1,19 @@
+version: "3.8"
+networks:
+  driver: bridge
+  ipam:
+    driver: default
+    config:
+      - subnet: "172.24.0.0/16"
+services:
+  example:
+    build:
+      context: .
+    expose:
+      - "8080"
+    ports:
+      - "8080"
+    networks:
+      appNetwork:
+        ipv4_address: 172.24.2.1
+    entrypoint: ["/app", "start", "--logging_level=info"]
