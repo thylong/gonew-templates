@@ -12,7 +12,7 @@ build: build-bin build-docker-image ## Build Go binaries & Docker image
 
 .PHONY: build-bin
 build-bin: ## Build Go server for present architecture
-	GOOS=linux GOARCH=amd64 go build -o build/$(NAME) ./cmd
+	go build -o build/$(NAME) ./cmd
 
 .PHONY: build-docker-image
 build-docker-image: ## Build Docker image
