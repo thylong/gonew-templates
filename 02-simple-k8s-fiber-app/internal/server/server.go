@@ -12,6 +12,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/thylong/go-templates/02-simple-k8s-fiber-app/internal/core"
+	"github.com/thylong/go-templates/02-simple-k8s-fiber-app/pkg/handler"
 )
 
 func CreateApp(httpTimeout int64, loggingLevel string, production bool) *core.App {
@@ -36,6 +37,8 @@ func CreateApp(httpTimeout int64, loggingLevel string, production bool) *core.Ap
 	fiberApp.Use(recover.New())
 	fiberApp.Use(logger.New())
 	fiberApp.Use(compress.New())
+
+	fiberApp.Get("/healthz", handler.Healthz)
 
 	// Catch all handler
 	fiberApp.Use(timeout.NewWithContext(
