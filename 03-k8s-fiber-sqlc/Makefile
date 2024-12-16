@@ -8,14 +8,14 @@ pre-commit-hooks-install: ## Install the pre-commit hooks
 	pre-commit install
 
 .PHONY: build
-build: build-bin build-docker-image ## Build Go binaries & Docker image
+build: build-bin build-image ## Build Go binaries & Docker image
 
 .PHONY: build-bin
 build-bin: ## Build Go server for present architecture
 	go build -o build/$(NAME) ./cmd
 
-.PHONY: build-docker-image
-build-docker-image: ## Build Docker image
+.PHONY: build-image
+build-image: ## Build Docker image
 	docker build -t thylong/$(NAME):latest .
 	docker-compose build example
 
