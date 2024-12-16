@@ -14,10 +14,10 @@ import (
 	"github.com/thylong/go-templates/02-simple-k8s-fiber-app/internal/core"
 )
 
-func CreateApp(httpTimeout int64, loggingLevel string) *core.App {
+func CreateApp(httpTimeout int64, loggingLevel string, production bool) *core.App {
 	fiberApp := fiber.New(fiber.Config{
-		Prefork:               true,
-		DisableStartupMessage: true,
+		Prefork:               production,
+		DisableStartupMessage: production,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		},
@@ -26,10 +26,12 @@ func CreateApp(httpTimeout int64, loggingLevel string) *core.App {
 	// init store logger
 	if loggingLevel == "debug" {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 		log.Debug().Msg("Setting global log level to debug")
 	}
 
+	if !production {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 	// Middlewares
 	fiberApp.Use(recover.New())
 	fiberApp.Use(logger.New())
