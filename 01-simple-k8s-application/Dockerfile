@@ -17,4 +17,4 @@ COPY --from=builder --chown=nonroot:nonroot /go/bin/app /
 
 EXPOSE 8080/tcp
 
-CMD ["/app", "start"]
+CMD ["/app", "run"]
