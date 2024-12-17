@@ -1,37 +1,92 @@
+linters-settings:
+  dupl:
+    threshold: 150 # Default 150
+  errcheck:
+    check-blank: true
+  funlen:
+    lines: 100
+    statements: 50
+  gocognit:
+    min-complexity: 25
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+  gocyclo:
+    min-complexity: 15
+  govet:
+    check-shadowing: true
+  lll:
+    line-length: 140
+  nestif:
+    min-complexity: 6
+  misspell:
+    locale: US
+  nolintlint:
+    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
+    allow-unused: false # report any unused nolint directives
+    require-explanation: false # don't require an explanation for nolint directives
+    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
+  stylecheck:
+    checks: ["all", "-ST1000"]
 linters:
   disable-all: true
   enable:
+    - asciicheck
     - bodyclose
+    # To be reactivated at some point for depguard v2.
+    # - depguard
     - dogsled
-    - gocyclo
+    - dupl
+    - errcheck
+    - exportloopref
+    - exhaustive
+    - funlen
+    - gocognit
     - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - gofmt
+    - goimports
+    - mnd
+    - goprintffuncname
+    - gosec
+    - gosimple
     - govet
     - ineffassign
+    - lll
     - misspell
     - nakedret
+    - nestif
+    - nilerr
+    - noctx
+    - nolintlint
+    - prealloc
+    - revive
     - rowserrcheck
     - staticcheck
     - stylecheck
+    # - testpackage
     - typecheck
     - unconvert
     - unparam
     - unused
     - whitespace
-    - godot
-    - gofmt
-    - gosimple
-    - revive
-
-linters-settings:
-  godot:
-    scope: declarations
-  goimports:
-    local-prefixes: github.com/thylong/bouine
-  gofmt:
-    simplify: false
-  gocyclo:
-    min-complexity: 10
-  revive:
-    ignore-generated-header: true
-    severity: warning
-    confidence: 0.3
+issues:
+  exclude-use-default: false
+  exclude:
+    - G114 # "Use of net/http serve function that has no support for setting timeouts" severity="error" source="gosec"
+    - Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*print(f|ln)?|os\.(Un)?Setenv). is not checked
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - funlen
+        - errcheck
+        - goconst
