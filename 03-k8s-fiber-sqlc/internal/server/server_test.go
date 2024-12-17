@@ -25,7 +25,7 @@ func TestCreateApp(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			app := CreateApp(tt.httpTimeout, tt.loggingLevel, tt.production)
+			app := CreateApp(tt.httpTimeout, tt.loggingLevel, tt.production, nil)
 			assert.NotNil(t, app)
 			assert.IsType(t, &core.App{}, app)
 			assert.IsType(t, &fiber.App{}, app.App)

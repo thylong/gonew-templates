@@ -50,6 +50,25 @@ test-bench: ## Launch Go benchmark tests
 test-unit: ## Launch Go unit tests
 	go test -cover ./...
 
+.PHONY: db-run
+db-run: ## Runs database service
+	@echo "🗄  Running database in the background"
+	docker compose up -d db
+
+.PHONY: db-upgrade
+db-upgrade: db-run ## Upgrade database to the latest head
+	@echo "🗄  Migrations: Upgrading to head"
+	migrate -path pkg/db/migrations -database "postgresql://admin:secret@localhost:5432/postgres?sslmode=disable" -verbose up
+
+.PHONY: db-downgrade
+db-downgrade: db-run ## Downgrade database one revision down
+	@echo "🗄  Migrations: Downgrading by 1"
+	yes | migrate -path pkg/db/migrations -database "postgresql://admin:secret@localhost:5432/postgres?sslmode=disable" -verbose down
+
+.PHONY: gen-models
+gen-models: ## Create/Update models from SQL migrations/queries
+	sqlc generate
+
 .PHONY: doc
 doc: ## Update documentation
 	go doc -http:=6060

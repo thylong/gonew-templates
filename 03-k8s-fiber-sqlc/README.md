@@ -5,6 +5,13 @@
 
 <!-- Short description -->
 
+## Requirements
+
+```bash
+# For MacOS
+brew install golang-migrate sqlc
+```
+
 ## Quickstart
 
 ```bash

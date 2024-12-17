@@ -9,13 +9,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/timeout"
+	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/internal/core"
+	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/pkg/db"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/pkg/handler"
 )
 
-func CreateApp(httpTimeout int64, loggingLevel string, production bool) *core.App {
+func CreateApp(httpTimeout int64, loggingLevel string, production bool, conn *pgx.Conn) *core.App {
 	fiberApp := fiber.New(fiber.Config{
 		Prefork:               production,
 		DisableStartupMessage: production,
@@ -33,12 +35,16 @@ func CreateApp(httpTimeout int64, loggingLevel string, production bool) *core.Ap
 	if !production {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
+
 	// Middlewares
 	fiberApp.Use(recover.New())
 	fiberApp.Use(logger.New())
 	fiberApp.Use(compress.New())
 
 	fiberApp.Get("/healthz", handler.Healthz)
+
+	queries := db.New(conn)
+	fiberApp.Post("/register", handler.NewAuthHandler(queries).SignUpUser)
 
 	// Catch all handler
 	fiberApp.Use(timeout.NewWithContext(

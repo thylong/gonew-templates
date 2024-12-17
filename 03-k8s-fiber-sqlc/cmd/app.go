@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/internal/server"
@@ -13,6 +16,7 @@ import (
 var (
 	port         string
 	httpTimeout  int64
+	databaseURI  string
 	loggingLevel string
 	production   bool
 )
@@ -23,6 +27,7 @@ func init() {
 	runCmd.Flags().StringVarP(&port, "port", "p", ":8080", "HTTP port to listen on")
 	runCmd.Flags().StringVarP(&loggingLevel, "logging_level", "l", "info", "The app logging level")
 	runCmd.Flags().Int64VarP(&httpTimeout, "timeout", "t", 500, "HTTP request timeout in milliseconds")
+	runCmd.Flags().StringVarP(&databaseURI, "database", "c", "postgres://admin:secret@db:5432/postgres?sslmode=disable", "Postgresql database URI, default to local Docker env")
 	runCmd.Flags().BoolVarP(&production, "production", "g", false, "enable production settings (logging fmt, prefork, etc)")
 }
 
@@ -43,9 +48,18 @@ var runCmd = &cobra.Command{
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 		flag.Parse()
 
+		// Connect to the database
+		// urlExample := "postgres://admin:secret@db:5432/postgres"
+		conn, err := pgx.Connect(context.Background(), databaseURI)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+			os.Exit(1)
+		}
+		defer conn.Close(context.Background())
+
+		app := server.CreateApp(httpTimeout, loggingLevel, production, conn)
 		// create Fiber app
-		app := server.CreateApp(httpTimeout, loggingLevel, production)
-		err := app.App.Listen("0.0.0.0" + port)
+		err = app.App.Listen("0.0.0.0" + port)
 		if err != nil {
 			log.Fatalf("fiber server failed to start: %v\n", err)
 		}
