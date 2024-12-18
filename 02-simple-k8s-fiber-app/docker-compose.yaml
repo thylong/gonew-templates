@@ -16,4 +16,4 @@ services:
     networks:
       appNetwork:
         ipv4_address: 172.24.2.1
-    entrypoint: ["/app", "start", "--logging_level=info"]
+    entrypoint: ["/app", "run", "--logging_level=info"]
