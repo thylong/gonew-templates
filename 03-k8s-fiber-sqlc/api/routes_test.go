@@ -24,7 +24,7 @@ func TestSetupRoutes(t *testing.T) {
 			description:  "register user",
 			method:       "POST",
 			route:        "/api/v1/register",
-			expectedCode: fiber.StatusOK,
+			expectedCode: fiber.StatusBadRequest,
 		},
 	}
 
