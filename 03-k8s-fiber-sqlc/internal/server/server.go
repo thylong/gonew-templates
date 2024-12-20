@@ -12,6 +12,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/api"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/internal/core"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/pkg/db"
 	"github.com/thylong/go-templates/03-k8s-fiber-sqlc/pkg/handler"
@@ -44,7 +45,7 @@ func CreateApp(httpTimeout int64, loggingLevel string, production bool, conn *pg
 	fiberApp.Get("/healthz", handler.Healthz)
 
 	queries := db.New(conn)
-	fiberApp.Post("/register", handler.NewAuthHandler(queries).SignUpUser)
+	api.SetupRoutes(fiberApp, queries)
 
 	// Catch all handler
 	fiberApp.Use(timeout.NewWithContext(
