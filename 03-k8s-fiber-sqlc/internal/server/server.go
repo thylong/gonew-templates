@@ -19,7 +19,7 @@ import (
 )
 
 func CreateApp(httpTimeout int64, loggingLevel string, production bool, conn *pgx.Conn) *core.App {
-	fiberApp := fiber.New(fiber.Config{
+	app := fiber.New(fiber.Config{
 		Prefork:               production,
 		DisableStartupMessage: production,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -38,24 +38,22 @@ func CreateApp(httpTimeout int64, loggingLevel string, production bool, conn *pg
 	}
 
 	// Middlewares
-	fiberApp.Use(recover.New())
-	fiberApp.Use(logger.New())
-	fiberApp.Use(compress.New())
+	app.Use(recover.New())
+	app.Use(logger.New())
+	app.Use(compress.New())
 
-	fiberApp.Get("/healthz", handler.Healthz)
+	app.Get("/healthz", handler.Healthz)
 
 	queries := db.New(conn)
-	api.SetupRoutes(fiberApp, queries)
+	api.SetupRoutes(app, queries)
 
 	// Catch all handler
-	fiberApp.Use(timeout.NewWithContext(
+	app.Use(timeout.NewWithContext(
 		func(c *fiber.Ctx) error {
 			return c.SendStatus(500)
 		},
 		time.Duration(httpTimeout)*time.Millisecond),
 	)
 
-	app := &core.App{App: fiberApp}
-
-	return app
+	return &core.App{App: app}
 }
