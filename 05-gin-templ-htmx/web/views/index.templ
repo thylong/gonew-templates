@@ -1,0 +1,19 @@
+package views
+
+templ Counter(count string) {
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title></title>
+      <script src="/assets/js/htmx.js"></script>
+  
+      <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+      Count { count }
+      <button hx-post="/count" hx-swap="outerHTML">Count</button>
+    </body>
+  </html>
+}
