@@ -13,3 +13,4 @@
 
 database/
 .DS_Store
+tmp/
