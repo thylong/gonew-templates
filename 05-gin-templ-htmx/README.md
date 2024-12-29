@@ -5,6 +5,9 @@
 
 <!-- Short description -->
 
+This go application template is a simple k8s application with a gin server, renders templ template with HTMX.
+It include a form and update values stored in-memory in a global variable.
+
 ## Requirements
 
 ```bash
@@ -19,8 +22,9 @@ go install github.com/a-h/templ/cmd/templ@latest
 ```bash
 gonew github.com/thylong/gonew-templates/01-simple-k8s-application example.com/myapp
 
-# To play with register example endpoint (using httpie)
-http POST http://localhost:8080/register name=john email=johndoe@example.org password=john
+# To play with / example endpoint (using httpie)
+air
+# Then go to http://localhost:8080
 ```
 
 ## Benchmarks
