@@ -18,6 +18,8 @@ jobs:
           - 01-simple-k8s-application
           - 02-simple-k8s-fiber-app
           - 03-k8s-fiber-sqlc
+          - 04-gin-sqlc
+          - 05-gin-templ-htmx
 
     steps:
       # Checkout the repository
