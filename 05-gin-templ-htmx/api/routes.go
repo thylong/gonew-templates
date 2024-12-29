@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/thylong/go-templates/05-gin-templ-htmx/web/views"
+	view "github.com/thylong/go-templates/05-gin-templ-htmx/web/view"
 )
 
 func SetupRoutes(r *gin.Engine) {
@@ -14,6 +14,6 @@ func SetupRoutes(r *gin.Engine) {
 	})
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "", views.Counter("testong"))
+		c.HTML(http.StatusOK, "", view.Counter("testong"))
 	})
 }
