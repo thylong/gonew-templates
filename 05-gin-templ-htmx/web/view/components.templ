@@ -1,0 +1,20 @@
+package view
+
+import "strconv"
+
+templ Counts(global, user int) {
+	<div>Global: { strconv.Itoa(global) }</div>
+	<div>User: { strconv.Itoa(user) }</div>
+}
+
+templ Form() {
+	<form id="countsForm" action="/" method="POST" hx-post="/" hx-select="#countsForm" hx-swap="outerHTML">
+		<div><button type="submit" name="global" value="global">Global</button></div>
+		<div><button type="submit" name="user" value="user">User</button></div>
+	</form>
+}
+
+templ Page(global, user int) {
+	  @Counts(global, user)
+	  @Form()
+}
