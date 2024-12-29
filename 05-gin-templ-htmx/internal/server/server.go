@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin/render"
 	"github.com/rs/zerolog"
 	"github.com/thylong/go-templates/05-gin-templ-htmx/api"
-	"github.com/thylong/go-templates/05-gin-templ-htmx/pkg/middlewares"
+	"github.com/thylong/go-templates/05-gin-templ-htmx/pkg/middleware"
 )
 
 func CreateApp(production bool, httpTimeout int64) *gin.Engine {
@@ -51,7 +51,7 @@ func CreateApp(production bool, httpTimeout int64) *gin.Engine {
 	}
 
 	// timeout middleware will return 408 if timeout is reached.
-	r.Use(middlewares.TimeoutMiddleware(httpTimeout))
+	r.Use(middleware.TimeoutMiddleware(httpTimeout))
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	r.Use(gin.Recovery())
