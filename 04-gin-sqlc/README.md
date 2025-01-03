@@ -15,7 +15,8 @@ brew install golang-migrate sqlc
 ## Quickstart
 
 ```bash
-gonew github.com/thylong/gonew-templates/01-simple-k8s-application example.com/myapp
+go install golang.org/x/tools/cmd/gonew@latest
+gonew github.com/thylong/gonew-templates/04-k8s-gin-sqlc github.com/example/myapp
 
 # To play with register example endpoint (using httpie)
 http POST http://localhost:8080/register name=john email=johndoe@example.org password=john

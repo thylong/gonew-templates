@@ -20,7 +20,8 @@ go install github.com/a-h/templ/cmd/templ@latest
 ## Quickstart
 
 ```bash
-gonew github.com/thylong/gonew-templates/01-simple-k8s-application example.com/myapp
+go install golang.org/x/tools/cmd/gonew@latest
+gonew github.com/thylong/gonew-templates/05-gin-templ-htmx github.com/example/myapp
 
 # To play with / example endpoint (using httpie)
 air
