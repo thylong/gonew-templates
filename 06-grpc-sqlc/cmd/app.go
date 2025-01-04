@@ -6,9 +6,13 @@ import (
 	"fmt"
 	"net"
 	_ "net/http/pprof"
+	"os"
+	"time"
 
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db"
 	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
@@ -53,7 +57,9 @@ var runCmd = &cobra.Command{
 	Short: "run the app",
 	Long:  `Run the application with given configuration (default with optional CLI flags overrides)`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Set up zerolog
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+		log.Logger = zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}).With().Timestamp().Logger()
 
 		flag.Parse()
 
@@ -66,7 +72,21 @@ var runCmd = &cobra.Command{
 		// Create db.Queries using the pool
 		queries := db.New(pool)
 
-		app := grpc.NewServer()
+		// Set up gRPC server options with middleware
+		opts := []logging.Option{
+			logging.WithLogOnEvents(logging.StartCall, logging.FinishCall),
+			// Add any other option (check functions starting with logging.With).
+		}
+
+		// You can now create a server with logging instrumentation that e.g. logs when the unary or stream call is started or finished.
+		app := grpc.NewServer(
+			grpc.ChainUnaryInterceptor(
+				logging.UnaryServerInterceptor(InterceptorLogger(log.Logger), opts...),
+			),
+			grpc.ChainStreamInterceptor(
+				logging.StreamServerInterceptor(InterceptorLogger(log.Logger), opts...),
+			),
+		)
 		healthServer := health.NewServer()
 
 		grpc_health_v1.RegisterHealthServer(app, healthServer)
@@ -85,4 +105,25 @@ var runCmd = &cobra.Command{
 			panic(fmt.Sprintf("failed to serve: %v", err))
 		}
 	},
+}
+
+// InterceptorLogger adapts zerolog logger to interceptor logger.
+// This code is simple enough to be copied and not imported.
+func InterceptorLogger(l zerolog.Logger) logging.Logger {
+	return logging.LoggerFunc(func(ctx context.Context, lvl logging.Level, msg string, fields ...any) {
+		l := l.With().Fields(fields).Logger()
+
+		switch lvl {
+		case logging.LevelDebug:
+			l.Debug().Msg(msg)
+		case logging.LevelInfo:
+			l.Info().Msg(msg)
+		case logging.LevelWarn:
+			l.Warn().Msg(msg)
+		case logging.LevelError:
+			l.Error().Msg(msg)
+		default:
+			panic(fmt.Sprintf("unknown level %v", lvl))
+		}
+	})
 }
