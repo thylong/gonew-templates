@@ -14,6 +14,8 @@ import (
 	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/server"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -65,7 +67,12 @@ var runCmd = &cobra.Command{
 		queries := db.New(pool)
 
 		app := grpc.NewServer()
+		healthServer := health.NewServer()
+
+		grpc_health_v1.RegisterHealthServer(app, healthServer)
 		eventpb.RegisterEventServiceServer(app, server.NewEventServiceServer(queries))
+		// Set the health status of the server
+		healthServer.SetServingStatus("EventService", grpc_health_v1.HealthCheckResponse_SERVING)
 		reflection.Register(app)
 
 		listener, err := net.Listen("tcp", fmt.Sprintf(":%s", port))

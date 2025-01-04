@@ -213,6 +213,13 @@ grpcurl -plaintext -d '{
 {}
 ```
 
+#### **Query the health probe**
+
+```bash
+
+grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check
+```
+
 ## Benchmarks
 
 ## Installation
