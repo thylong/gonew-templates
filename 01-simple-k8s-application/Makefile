@@ -17,7 +17,7 @@ build-bin: ## Build Go server for present architecture
 .PHONY: build-image
 build-image: ## Build Docker image
 	docker build -t thylong/$(NAME):latest .
-	docker-compose build example
+	docker compose build example
 
 .PHONY: push-docker-image
 push-docker-image: ## Push Docker image
