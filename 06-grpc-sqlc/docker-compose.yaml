@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - ./database/postgres/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+  migrate:
+    image: migrate/migrate
+  example:
+    build:
+      context: .
+    environment:
+      DATABASE_URI: "postgresql://admin:secret@localhost:5432/postgres?sslmode=disable"
+    depends_on:
+      - db
+    links:
+      - db
+    expose:
+      - "50051:50051"
+    ports:
+      - "50051:50051"
+    entrypoint: ["/app", "run", "--logging_level=info"]

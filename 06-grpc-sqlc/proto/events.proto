@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package events;
+
+import "google/type/datetime.proto";
+
+// EventPrivacy represents the different privacty levels of an event
+enum EventPrivacy {
+  PET_PRIVACY_INTERNAL = 0;
+  PET_PRIVACY_EXTERNAL = 1;
+}
+
+// Event represents an event that occured in the company
+message Event {
+  EventPrivacy event_privacy = 1;
+  string event_id = 2;
+  string name = 3;
+  string type = 4;
+  string department = 5;
+  string regions = 6;
+  string tags = 7;
+  google.type.DateTime start_at = 8;
+}
+
+message GetEventsRequest {
+  // Pagination parameters (optional)
+  int32 page = 1;        // The page number
+  int32 page_size = 2;   // Number of events per page
+  
+  // Filtering parameters (optional)
+  string search = 3;     // Search query for filtering events
+}
+
+// Response message for GetEvents
+message GetEventsResponse {
+  repeated Event events = 1;
+  
+  // Pagination metadata
+  int32 total_count = 2;  // Total number of events
+  int32 page = 3;         // Current page
+  int32 page_size = 4;    // Number of events per page
+}
+
+message GetEventRequest {
+  string event_id = 1;
+}
+
+message GetEventResponse {
+  Event event = 1;
+}
+
+message PutEventRequest {
+  EventPrivacy event_privacy = 1;
+  string event_id = 2;
+  string name = 3;
+  string type = 4;
+  string department = 5;
+  string regions = 6;
+  string tags = 7;
+  google.type.DateTime start_at = 8;
+}
+
+message PutEventResponse {
+  Event event = 1;
+}
+
+message DeleteEventRequest {
+  string eventID = 1;
+}
+
+message DeleteEventResponse {}
+
+service EventService {
+  rpc GetEvents(GetEventsRequest) returns (GetEventsResponse) {}
+  rpc GetEvent(GetEventRequest) returns (GetEventResponse) {}
+  rpc PutEvent(PutEventRequest) returns (PutEventResponse) {}
+  rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse) {}
+}

@@ -1,0 +1,16 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: pkg/proto
+    opt: paths=source_relative
+  - remote: buf.build/grpc/go
+    out: pkg/proto
+    opt:
+      - paths=source_relative
+inputs:
+  - directory: proto
