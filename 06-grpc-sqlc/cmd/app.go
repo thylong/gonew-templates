@@ -16,6 +16,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db"
+	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/middleware"
 	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/server"
 	"google.golang.org/grpc"
@@ -84,6 +85,7 @@ var runCmd = &cobra.Command{
 		// You can now create a server with logging instrumentation that e.g. logs when the unary or stream call is started or finished.
 		app := grpc.NewServer(
 			grpc.ChainUnaryInterceptor(
+				middleware.DefaultTimeoutUnaryInterceptor(time.Duration(httpTimeout)*time.Millisecond),
 				grpc_recovery.UnaryServerInterceptor(grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
 					log.Error().Msgf("panic recovered: %v", p)
 					return status.Errorf(codes.Internal, "unexpected error occurred")
