@@ -3,12 +3,13 @@ package server
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db" // Import sqlc-generated code
 	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type EventServiceServer struct {
@@ -39,19 +40,19 @@ func (s *EventServiceServer) GetEvents(ctx context.Context, req *eventpb.GetEven
 		Offset:  int32(offset),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch events: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to fetch events: %w", err)
 	}
 
 	totalCount, err := s.queries.GetEventsCount(ctx, pgtype.Text{String: req.Search, Valid: true})
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch event count: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to fetch event count: %w", err)
 	}
 
 	var pbEvents []*eventpb.Event
 	for _, e := range events {
 		startAt, err := convertToProtoDateTime(e.StartAt)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert start time: %w", err)
+			return nil, status.Errorf(codes.InvalidArgument, "failed to convert start time: %w", err)
 		}
 		pbEvents = append(pbEvents, &eventpb.Event{
 			EventId:      e.EventID.String(),
@@ -78,7 +79,7 @@ func (s *EventServiceServer) GetEvent(ctx context.Context, req *eventpb.GetEvent
 	// Parse and validate the UUID
 	parsedUUID, err := uuid.Parse(req.EventId)
 	if err != nil {
-		return nil, fmt.Errorf("invalid UUID: %w", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid UUID: %w", err)
 	}
 
 	// Create a pgtype.UUID instance
@@ -90,14 +91,14 @@ func (s *EventServiceServer) GetEvent(ctx context.Context, req *eventpb.GetEvent
 	event, err := s.queries.GetEventByID(ctx, eventID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("event not found")
+			return nil, status.Errorf(codes.NotFound, "event not found")
 		}
-		return nil, fmt.Errorf("failed to fetch event: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to fetch event: %w", err)
 	}
 
 	startAt, err := convertToProtoDateTime(event.StartAt)
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert start time: %w", err)
+		return nil, status.Errorf(codes.InvalidArgument, "failed to convert start time: %w", err)
 	}
 
 	return &eventpb.GetEventResponse{
@@ -117,7 +118,7 @@ func (s *EventServiceServer) GetEvent(ctx context.Context, req *eventpb.GetEvent
 // PutEvent handles inserting a new event
 func (s *EventServiceServer) PutEvent(ctx context.Context, req *eventpb.PutEventRequest) (*eventpb.PutEventResponse, error) {
 	if req.StartAt == nil {
-		return nil, fmt.Errorf("failed to insert event: invalid or missing StartAt")
+		return nil, status.Errorf(codes.InvalidArgument, "failed to insert event: invalid or missing StartAt")
 	}
 	startAt := convertFromProtoDateTime(req.StartAt)
 
@@ -131,7 +132,7 @@ func (s *EventServiceServer) PutEvent(ctx context.Context, req *eventpb.PutEvent
 		StartAt:      pgtype.Timestamp{Time: startAt, Valid: true},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to insert event: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to insert event: %w", err)
 	}
 
 	startAtProto, _ := convertToProtoDateTime(event.StartAt)
@@ -155,7 +156,7 @@ func (s *EventServiceServer) DeleteEvent(ctx context.Context, req *eventpb.Delet
 	// Parse and validate the UUID
 	parsedUUID, err := uuid.Parse(req.EventID)
 	if err != nil {
-		return nil, fmt.Errorf("invalid UUID: %w", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid UUID: %w", err)
 	}
 
 	// Create a pgtype.UUID instance
@@ -166,7 +167,7 @@ func (s *EventServiceServer) DeleteEvent(ctx context.Context, req *eventpb.Delet
 
 	err = s.queries.DeleteEvent(ctx, eventID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to delete event: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to delete event: %w", err)
 	}
 	return &eventpb.DeleteEventResponse{}, nil
 }
