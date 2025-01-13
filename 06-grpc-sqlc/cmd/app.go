@@ -20,7 +20,7 @@ import (
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/handler"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/middleware"
-	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
+	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto/events"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"

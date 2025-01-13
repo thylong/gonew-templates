@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db" // Import sqlc-generated code
-	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
+	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto/events"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
