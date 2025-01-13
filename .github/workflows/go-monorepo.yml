@@ -50,6 +50,21 @@ jobs:
           cd ${{ matrix.module }}
           go mod tidy
 
+      # Build the Binary
+      - name: Build Go Binary
+        run: |
+          cd ${{ matrix.module }}
+          go build -o example ./cmd
+
+      # Verify Build Success
+      - name: Check if binary exists
+        run: |
+          cd ${{ matrix.module }}
+          if [ ! -f "example" ]; then
+            echo "Binary not found!"
+            exit 1
+          fi
+
       # Run tests
       - name: Run tests
         run: |
