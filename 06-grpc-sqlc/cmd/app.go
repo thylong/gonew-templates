@@ -7,6 +7,8 @@ import (
 	"net"
 	_ "net/http/pprof"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -109,10 +111,21 @@ var runCmd = &cobra.Command{
 			panic(fmt.Sprintf("failed to start listener: %v", err))
 		}
 
-		fmt.Printf("gRPC server running on port %s\n", port)
-		if err := app.Serve(listener); err != nil {
-			panic(fmt.Sprintf("failed to serve: %v", err))
-		}
+		// Handle graceful shutdown
+		stop := make(chan os.Signal, 1)
+		signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+
+		go func() {
+			fmt.Printf("gRPC server running on port %s\n", port)
+			if err := app.Serve(listener); err != nil {
+				log.Fatal().Err(err).Msg("failed to serve")
+			}
+		}()
+
+		<-stop
+		fmt.Println("Shutting down gRPC server...")
+		app.GracefulStop()
+		fmt.Println("gRPC server stopped")
 	},
 }
 
