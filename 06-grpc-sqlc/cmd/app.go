@@ -84,7 +84,7 @@ var runCmd = &cobra.Command{
 			// Add any other option (check functions starting with logging.With).
 		}
 
-		// You can now create a server with logging instrumentation that e.g. logs when the unary or stream call is started or finished.
+		// Creates a server with logging instrumentation that logs when the unary or stream call is started or finished.
 		app := grpc.NewServer(
 			grpc.ChainUnaryInterceptor(
 				middleware.DefaultTimeoutUnaryInterceptor(time.Duration(httpTimeout)*time.Millisecond),
@@ -102,6 +102,7 @@ var runCmd = &cobra.Command{
 
 		grpc_health_v1.RegisterHealthServer(app, healthServer)
 		eventpb.RegisterEventServiceServer(app, server.NewEventServiceServer(queries))
+
 		// Set the health status of the server
 		healthServer.SetServingStatus("EventService", grpc_health_v1.HealthCheckResponse_SERVING)
 		reflection.Register(app)
