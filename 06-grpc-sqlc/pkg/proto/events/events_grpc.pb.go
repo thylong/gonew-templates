@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: events/events.proto
 
-package events
+package eventsv1
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EventService_GetEvents_FullMethodName   = "/events.EventService/GetEvents"
-	EventService_GetEvent_FullMethodName    = "/events.EventService/GetEvent"
-	EventService_PutEvent_FullMethodName    = "/events.EventService/PutEvent"
-	EventService_DeleteEvent_FullMethodName = "/events.EventService/DeleteEvent"
+	EventService_GetEvents_FullMethodName   = "/events.v1.EventService/GetEvents"
+	EventService_GetEvent_FullMethodName    = "/events.v1.EventService/GetEvent"
+	EventService_PutEvent_FullMethodName    = "/events.v1.EventService/PutEvent"
+	EventService_DeleteEvent_FullMethodName = "/events.v1.EventService/DeleteEvent"
 )
 
 // EventServiceClient is the client API for EventService service.
@@ -210,7 +210,7 @@ func _EventService_DeleteEvent_Handler(srv interface{}, ctx context.Context, dec
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "events.EventService",
+	ServiceName: "events.v1.EventService",
 	HandlerType: (*EventServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
