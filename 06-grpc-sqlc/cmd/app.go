@@ -18,9 +18,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/db"
+	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/handler"
 	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/middleware"
 	eventpb "github.com/thylong/go-templates/06-grpc-sqlc/pkg/proto"
-	"github.com/thylong/go-templates/06-grpc-sqlc/pkg/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
@@ -101,7 +101,7 @@ var runCmd = &cobra.Command{
 		healthServer := health.NewServer()
 
 		grpc_health_v1.RegisterHealthServer(app, healthServer)
-		eventpb.RegisterEventServiceServer(app, server.NewEventServiceServer(queries))
+		eventpb.RegisterEventServiceServer(app, handler.NewEventServiceServer(queries))
 
 		// Set the health status of the server
 		healthServer.SetServingStatus("EventService", grpc_health_v1.HealthCheckResponse_SERVING)
