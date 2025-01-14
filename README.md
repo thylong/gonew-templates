@@ -10,6 +10,7 @@ The idea is reduce the burden of bootstrapping my Go applications.
 03. k8s fiber sqlc [![Go Report Card](https://goreportcard.com/badge/github.com/thylong/go-templates/03-k8s-fiber-sqlc)](https://goreportcard.com/report/github.com/thylong/go-templates/03-k8s-fiber-sqlc)
 04. k8s gin sqlc [![Go Report Card](https://goreportcard.com/badge/github.com/thylong/go-templates/04-gin-sqlc)](https://goreportcard.com/report/github.com/thylong/go-templates/04-gin-sqlc)
 05. k8s gin templ HTMX [![Go Report Card](https://goreportcard.com/badge/github.com/thylong/go-templates/05-gin-templ-htmx)](https://goreportcard.com/report/github.com/thylong/go-templates/05-gin-templ-htmx)
+06. k8s grpc sqlc [![Go Report Card](https://goreportcard.com/badge/github.com/thylong/go-templates/06-grpc-sqlc)](https://goreportcard.com/report/github.com/thylong/go-templates/06-grpc-sqlc)
 
 ## Requirements
 
